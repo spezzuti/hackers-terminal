@@ -1,7 +1,7 @@
 {
   "name": "hackers-terminal",
   "productName": "HACKERS Terminal",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "A stylish mid-90s cyberculture terminal for Windows.",
   "main": "src/main/main.js",
   "author": "HACKERS Terminal contributors",
@@ -27,48 +27,5 @@
   "devDependencies": {
     "electron": "^38.8.6",
     "electron-builder": "26.15.3"
-  },
-  "build": {
-    "appId": "club.cyberia.hackersterminal",
-    "productName": "HACKERS Terminal",
-    "asar": true,
-    "asarUnpack": [
-      "node_modules/node-pty/**/*"
-    ],
-    "files": [
-      "src/**/*",
-      "assets/**/*",
-      "package.json"
-    ],
-    "directories": {
-      "output": "release",
-      "buildResources": "build"
-    },
-    "win": {
-      "target": [
-        {
-          "target": "nsis",
-          "arch": [
-            "x64"
-          ]
-        },
-        {
-          "target": "portable",
-          "arch": [
-            "x64"
-          ]
-        }
-      ],
-      "artifactName": "Hackers-Terminal-${version}-${arch}-${target}.${ext}"
-    },
-    "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true,
-      "createDesktopShortcut": true,
-      "createStartMenuShortcut": true,
-      "shortcutName": "HACKERS Terminal",
-      "uninstallDisplayName": "HACKERS Terminal",
-      "deleteAppDataOnUninstall": false
-    }
   }
 }
