@@ -1,0 +1,41 @@
+appId: club.cyberia.hackersterminal
+productName: HACKERS Terminal
+publish:
+  provider: github
+  owner: spezzuti
+  repo: hackers-terminal
+asar: true
+asarUnpack:
+  - node_modules/node-pty/**/*
+  - node_modules/@lydell/node-pty-win32-x64/**/*
+files:
+  - src/**/*
+  - assets/**/*
+  - package.json
+directories:
+  output: release
+  buildResources: build
+win:
+  icon: build/icon.ico
+  target:
+    - target: nsis
+      arch: [x64]
+    - target: portable
+      arch: [x64]
+nsis:
+  artifactName: Hackers-Terminal-Setup-${version}-${arch}.${ext}
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  include: build/installer.nsh
+  installerIcon: build/icon.ico
+  uninstallerIcon: build/icon.ico
+  installerHeader: build/installerHeader.bmp
+  installerSidebar: build/installerSidebar.bmp
+  uninstallerSidebar: build/uninstallerSidebar.bmp
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: HACKERS Terminal
+  uninstallDisplayName: HACKERS Terminal
+  deleteAppDataOnUninstall: false
+portable:
+  artifactName: Hackers-Terminal-Portable-${version}-${arch}.${ext}

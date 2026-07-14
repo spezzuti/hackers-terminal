@@ -1,0 +1,74 @@
+{
+  "name": "hackers-terminal",
+  "productName": "HACKERS Terminal",
+  "version": "0.5.0",
+  "description": "A stylish mid-90s cyberculture terminal for Windows.",
+  "main": "src/main/main.js",
+  "author": "HACKERS Terminal contributors",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "test": "node --test tests/*.test.js",
+    "lint": "node scripts/check-syntax.js",
+    "pack": "electron-builder --config electron-builder-release.yml --dir",
+    "dist": "electron-builder --config electron-builder-release.yml --win nsis portable",
+    "release": "electron-builder --config electron-builder-release.yml --win nsis portable --publish always"
+  },
+  "dependencies": {
+    "@xterm/addon-fit": "0.11.0",
+    "@xterm/addon-search": "0.16.0",
+    "@xterm/addon-web-links": "0.12.0",
+    "@xterm/xterm": "6.0.0",
+    "electron-updater": "^6.8.9",
+    "node-pty": "npm:@lydell/node-pty@^1.2.0-beta.12"
+  },
+  "devDependencies": {
+    "electron": "^38.8.6",
+    "electron-builder": "26.15.3"
+  },
+  "build": {
+    "appId": "club.cyberia.hackersterminal",
+    "productName": "HACKERS Terminal",
+    "asar": true,
+    "asarUnpack": [
+      "node_modules/node-pty/**/*"
+    ],
+    "files": [
+      "src/**/*",
+      "assets/**/*",
+      "package.json"
+    ],
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "artifactName": "Hackers-Terminal-${version}-${arch}-${target}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "HACKERS Terminal",
+      "uninstallDisplayName": "HACKERS Terminal",
+      "deleteAppDataOnUninstall": false
+    }
+  }
+}

@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; font-src 'self' data:">
+  <title>HACKERS // Terminal</title>
+  <link rel="stylesheet" href="../../node_modules/@xterm/xterm/css/xterm.css">
+  <link rel="stylesheet" href="styles.css">
+  <script src="boot-primer.js"></script>
+</head>
+<body>
+  <div id="app" class="app scanlines glow">
+    <div class="noise" aria-hidden="true"></div>
+    <header class="titlebar">
+      <div class="brand" title="HACKERS // Terminal">
+        <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
+          <path d="M4 20 13 5h14l9 15-9 15H13Z"/>
+          <path d="m11 20 5-8h8l5 8-5 8h-8Z"/>
+          <circle cx="20" cy="20" r="3"/>
+        </svg>
+        <div><span id="brand-title">HACKERS</span><small id="brand-subtitle">TERMINAL SYSTEM</small></div>
+      </div>
+      <div id="tabs" class="tabs" role="tablist"></div>
+      <div class="new-tab-wrap">
+        <button id="new-tab" class="icon-button" title="New tab (Ctrl+Shift+T)" aria-label="New tab">+</button>
+        <button id="profile-menu-button" class="icon-button menu-caret" title="Profiles" aria-label="Choose profile">⌄</button>
+        <div id="profile-menu" class="popup profile-menu hidden"></div>
+      </div>
+      <div class="drag-region"></div>
+      <div class="system-readout"><i></i><span id="clock">00:00:00</span></div>
+      <div class="window-controls">
+        <button data-window="minimize" aria-label="Minimize">—</button>
+        <button data-window="maximize" aria-label="Maximize">□</button>
+        <button data-window="close" class="close" aria-label="Close">×</button>
+      </div>
+    </header>
+
+    <div class="toolbar">
+      <div class="status-cluster">
+        <span class="live-dot"></span>
+        <span id="active-profile">SYSTEM ONLINE</span>
+        <span class="slash">//</span>
+        <span id="session-readout">CONNECTION 01</span>
+      </div>
+      <div class="toolbar-actions">
+        <button id="broadcast-toggle" data-command="broadcast" title="Broadcast input (Ctrl+Shift+B)">⌁ BROADCAST</button>
+        <button data-command="previousMark" title="Previous command mark (Ctrl+Up)">↑ MARK</button>
+        <button data-command="splitRight" title="Split pane right (Alt+Shift+=)"><span class="split-icon vertical"></span> SPLIT</button>
+        <button data-command="find" title="Find (Ctrl+Shift+F)">⌕ FIND</button>
+        <button data-command="palette" title="Command palette (Ctrl+Shift+P)">⌘ COMMAND</button>
+        <button data-command="settings" title="Settings (Ctrl+,)">⚙ SETUP</button>
+      </div>
+    </div>
+
+    <main id="workspace" class="workspace"></main>
+
+    <footer class="statusbar">
+      <span id="status-logo" class="status-logo">CYBERIA NODE</span>
+      <span><b>ENC</b> UTF-8</span>
+      <span><b>TERM</b> xterm-256color</span>
+      <span id="pane-count"><b>LINKS</b> 1</span>
+      <span class="status-spacer"></span>
+      <button id="update-badge" class="update-badge hidden" title="Restart to install the update"></button>
+      <span id="theme-label">ACID BURN</span>
+      <span id="font-label">14 PX</span>
+      <span class="signal" aria-label="signal"><i></i><i></i><i></i><i></i></span>
+    </footer>
+
+    <div id="find-bar" class="find-bar hidden">
+      <input id="find-input" type="text" placeholder="SEARCH BUFFER" autocomplete="off" spellcheck="false">
+      <button id="find-prev" title="Previous match">↑</button>
+      <button id="find-next" title="Next match">↓</button>
+      <label><input id="find-case" type="checkbox"> Aa</label>
+      <button id="find-close" title="Close">×</button>
+    </div>
+
+    <div id="palette" class="overlay hidden" aria-hidden="true">
+      <div class="palette-panel">
+        <div class="palette-head"><span>›_</span><input id="palette-input" placeholder="TYPE A COMMAND" autocomplete="off" spellcheck="false"></div>
+        <div id="palette-list" class="palette-list"></div>
+        <div class="palette-foot"><span>↑↓ NAVIGATE</span><span>ENTER EXECUTE</span><span>ESC ABORT</span></div>
+      </div>
+    </div>
+
+    <div id="settings" class="overlay hidden" aria-hidden="true">
+      <section class="settings-panel">
+        <header><div><p>CONTROL DECK</p><h1>Terminal setup</h1></div><button id="settings-close" aria-label="Close settings">×</button></header>
+        <div class="settings-body">
+          <nav>
+            <button class="active" data-settings-page="appearance">APPEARANCE</button>
+            <button data-settings-page="behavior">BEHAVIOR</button>
+            <button data-settings-page="profiles">PROFILES</button>
+            <div class="settings-code">HT-95<br>BUILD <span id="version">0.1.0</span></div>
+          </nav>
+          <div class="settings-content">
+            <div class="settings-page active" data-page="appearance">
+              <h2>Visual signal</h2><p class="lede">Tune the phosphor glow. Changes are previewed live.</p>
+              <label class="field"><span>EXPERIENCE</span><select id="setting-experience"><option value="hackers">HACKERS // 1995</option><option value="fallout">FALLOUT // RETRO-FUTURE</option></select></label>
+              <label class="field"><span>COLOR SCHEME</span><select id="setting-theme"></select></label>
+              <label class="field"><span>TYPEFACE</span><input id="setting-font" type="text"></label>
+              <div class="field-row">
+                <label class="field"><span>FONT SIZE</span><input id="setting-font-size" type="number" min="9" max="32"></label>
+                <label class="field"><span>OPACITY</span><input id="setting-opacity" type="range" min="60" max="100"><output id="opacity-output"></output></label>
+              </div>
+              <div class="toggle-grid">
+                <label><span><b>CRT scanlines</b><small>Subtle analog raster overlay</small></span><input id="setting-scanlines" type="checkbox"><i></i></label>
+                <label><span><b>Phosphor glow</b><small>Neon bloom around text</small></span><input id="setting-glow" type="checkbox"><i></i></label>
+                <label><span><b>Blinking cursor</b><small>Block cursor pulse</small></span><input id="setting-cursor" type="checkbox"><i></i></label>
+              </div>
+            </div>
+            <div class="settings-page" data-page="behavior">
+              <h2>Interaction</h2><p class="lede">Control boot theatrics and terminal feedback.</p>
+              <label class="field"><span>SCROLLBACK LINES</span><input id="setting-scrollback" type="number" min="1000" max="100000" step="1000"></label>
+              <label class="field"><span>GLOBAL QUAKE SHORTCUT</span><input id="setting-quake-shortcut" type="text" placeholder="Control+Shift+Space"><small id="quake-status" class="field-help">Drops the terminal from the top of the active display.</small></label>
+              <div class="toggle-grid">
+                <label><span><b>Interface sounds</b><small>Synthesized, copyright-free cues</small></span><input id="setting-sounds" type="checkbox"><i></i></label>
+                <label><span><b>Keystroke ticks</b><small>Very quiet mechanical feedback</small></span><input id="setting-keysounds" type="checkbox"><i></i></label>
+                <label><span><b>Startup sequence</b><small>Show the system handshake on launch</small></span><input id="setting-startup" type="checkbox"><i></i></label>
+                <label><span><b>Restore workspace</b><small>Reopen tab and split-pane topology</small></span><input id="setting-restore" type="checkbox"><i></i></label>
+                <label><span><b>Shell integration marks</b><small>OSC 133 prompt markers and navigation</small></span><input id="setting-marks" type="checkbox"><i></i></label>
+              </div>
+            </div>
+            <div class="settings-page" data-page="profiles">
+              <h2>Access profiles</h2><p class="lede">Discover, import, elevate, and edit shell profiles.</p>
+              <div class="profile-actions">
+                <button id="discover-ssh" class="secondary">DISCOVER SSH</button>
+                <button id="import-wt" class="secondary">IMPORT WINDOWS TERMINAL</button>
+                <button id="apply-profile-json" class="secondary">APPLY JSON</button>
+              </div>
+              <div id="profile-settings" class="profile-settings"></div>
+              <label class="field profile-json-field"><span>PROFILE JSON</span><textarea id="profile-json" spellcheck="false"></textarea><small id="profile-json-status" class="field-help">Edit commands, arguments, directories, elevation, and shell integration.</small></label>
+              <p class="settings-note">Elevated profiles show a UAC prompt and remain embedded through a secured local helper. Imported data never leaves this computer.</p>
+            </div>
+          </div>
+        </div>
+        <footer><button id="settings-reset" class="secondary">RESET DEFAULTS</button><button id="settings-save" class="primary">SAVE &amp; RETURN</button></footer>
+      </section>
+    </div>
+
+    <div id="boot" class="boot-screen">
+      <div class="boot-grid"></div>
+      <div class="boot-core">
+        <svg viewBox="0 0 100 100" aria-hidden="true"><path d="M12 50 31 17h38l19 33-19 33H31Z"/><path d="m29 50 11-19h20l11 19-11 19H40Z"/><circle cx="50" cy="50" r="6"/></svg>
+        <h1 id="boot-title">HACKERS</h1><p id="boot-subtitle">TERMINAL SYSTEM // 1995</p>
+        <div id="boot-flavor" class="boot-flavor hidden"></div>
+        <div class="boot-progress"><i></i></div>
+        <code id="boot-status">INITIALIZING NEURAL LINK...</code>
+      </div>
+    </div>
+
+    <div id="toast-region" class="toast-region" aria-live="polite"></div>
+  </div>
+  <script src="renderer.js"></script>
+</body>
+</html>

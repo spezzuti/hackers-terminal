@@ -1,0 +1,9 @@
+node_modules/
+release/
+dist/
+*.log
+.DS_Store
+
+# Third-party UI reference imagery. Kept local: this project ships original code-drawn art and
+# does not redistribute game or film artwork.
+.reference/
