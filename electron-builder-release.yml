@@ -4,6 +4,9 @@ publish:
   provider: github
   owner: spezzuti
   repo: hackers-terminal
+  # electron-builder defaults to a draft release, and electron-updater cannot see drafts:
+  # /releases/latest skips them, so the update feed would silently stay empty forever.
+  releaseType: release
 asar: true
 asarUnpack:
   - node_modules/node-pty/**/*
